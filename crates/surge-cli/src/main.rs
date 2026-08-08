@@ -1,12 +1,22 @@
 mod config;
+mod vu;
+
+use std::sync::Arc;
 
 use clap::Parser;
 use config::Config;
-use mlua::{Lua, Result as LuaResult};
+use mlua::Result as LuaResult;
 
-fn main() -> LuaResult<()> {
-    let _config = Config::parse();
-    let _lua = Lua::new();
+use crate::vu::Vu;
+
+#[tokio::main]
+async fn main() -> LuaResult<()> {
+    let config = Arc::new(Config::parse());
+
+    let my_vu = Vu::new(config.clone());
+
+    my_vu.initialize();
+    my_vu.mainloop().await;
 
     Ok(())
 }
