@@ -1,3 +1,5 @@
-local math = require("mymodule");
+local function add(a, b)
+    return a + b
+end
 
-print(math.add(5, 2));
+print(string.dump(add))
