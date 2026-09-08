@@ -1,10 +1,6 @@
-pub mod init;
-pub mod run;
+use std::path::PathBuf;
 
-use clap::{Parser, Subcommand};
-
-pub use init::InitArgs;
-pub use run::RunArgs;
+use clap::{Args, Parser, Subcommand};
 
 #[derive(Parser, Debug, Clone)]
 #[command(name = "surge", about = "a modern load testing tool", version, long_about = None)]
@@ -15,6 +11,15 @@ pub struct Config {
     #[command(subcommand)]
     pub command: Commands,
 }
+
+#[derive(Args, Debug, Clone)]
+pub struct InitArgs {
+    #[arg(value_name = "PATH", default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Args, Debug, Clone)]
+pub struct RunArgs {}
 
 #[derive(Subcommand, Debug, Clone)]
 pub enum Commands {
