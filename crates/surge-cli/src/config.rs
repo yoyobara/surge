@@ -13,16 +13,20 @@ pub struct Config {
 }
 
 #[derive(Args, Debug, Clone)]
+pub struct RunArgs {}
+
+#[derive(Args, Debug, Clone)]
 pub struct InitArgs {
     #[arg(value_name = "PATH", default_value = ".")]
     pub path: PathBuf,
 }
 
 #[derive(Args, Debug, Clone)]
-pub struct RunArgs {}
+pub struct ShowArgs {}
 
 #[derive(Subcommand, Debug, Clone)]
 pub enum Commands {
     Run(RunArgs),
     Init(InitArgs),
+    Show(ShowArgs),
 }

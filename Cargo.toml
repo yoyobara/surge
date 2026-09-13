@@ -3,6 +3,4 @@ resolver = "2"
 members = [
     "crates/*",
 ]
-
-[workspace.dependencies]
 # Define shared dependencies here if needed in the future
