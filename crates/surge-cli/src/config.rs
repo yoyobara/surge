@@ -13,7 +13,10 @@ pub struct Config {
 }
 
 #[derive(Args, Debug, Clone)]
-pub struct RunArgs {}
+pub struct RunArgs {
+    #[arg(value_name = "TEST")]
+    test_file: PathBuf,
+}
 
 #[derive(Args, Debug, Clone)]
 pub struct InitArgs {
