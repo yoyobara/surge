@@ -1,5 +1,6 @@
 mod config;
 mod init;
+mod run;
 mod show;
 
 use std::sync::Arc;
@@ -8,10 +9,9 @@ use clap::Parser;
 use config::{Commands, Config};
 use init::handle_init;
 
-use crate::show::handle_show;
+use crate::{run::handle_run, show::handle_show};
 
-#[tokio::main]
-async fn main() {
+fn main() {
     let config = Arc::new(Config::parse());
 
     match &config.command {
@@ -22,11 +22,16 @@ async fn main() {
             }
         }
         Commands::Run(args) => {
-            dbg!(args);
+            let rt = tokio::runtime::Runtime::new().expect("could not create tokio runtime");
+            if let Err(err) = rt.block_on(handle_run(args)) {
+                eprintln!("Error running project: {err}");
+                std::process::exit(1);
+            }
         }
         Commands::Show(args) => {
             if let Err(err) = handle_show(args) {
                 eprintln!("error listing tests: {err}");
+                std::process::exit(1);
             }
         }
     }

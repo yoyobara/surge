@@ -29,7 +29,7 @@ fn build_dir(graph: &mut TestsGraph, current_path: &Path, parent: NodeIndex) -> 
     Ok(())
 }
 
-pub fn handle_show(args: &ShowArgs) -> IoResult<()> {
+pub fn handle_show(_args: &ShowArgs) -> IoResult<()> {
     let mut graph = TestsGraph::new();
     let root = graph.add_node(".".to_string());
 
