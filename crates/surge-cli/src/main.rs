@@ -22,8 +22,7 @@ fn main() {
             }
         }
         Commands::Run(args) => {
-            let rt = tokio::runtime::Runtime::new().expect("could not create tokio runtime");
-            if let Err(err) = rt.block_on(handle_run(args)) {
+            if let Err(err) = handle_run(args) {
                 eprintln!("Error running project: {err}");
                 std::process::exit(1);
             }

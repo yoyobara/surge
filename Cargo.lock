@@ -917,12 +917,14 @@ dependencies = [
  "include_dir",
  "petgraph",
  "ptree",
- "tokio",
 ]
 
 [[package]]
 name = "surge-runtime"
 version = "0.1.0"
+dependencies = [
+ "tokio",
+]
 
 [[package]]
 name = "syn"
