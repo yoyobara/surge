@@ -1,5 +1,8 @@
+mod lua;
 mod utils;
 mod vu;
+
+pub use lua::LuaModuleLoader;
 
 use crate::vu::Vu;
 use std::time::Duration;
@@ -21,7 +24,12 @@ async fn spawn_vus(code: String, vus: u32) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn start_runtime(code: String, vus: u32, _duration: Duration) -> anyhow::Result<()> {
+pub fn start_runtime(
+    code: String,
+    loder: impl LuaModuleLoader,
+    vus: u32,
+    _duration: Duration,
+) -> anyhow::Result<()> {
     let tokio_runtime = tokio::runtime::Runtime::new()?;
     tokio_runtime.block_on(spawn_vus(code, vus))
 }
