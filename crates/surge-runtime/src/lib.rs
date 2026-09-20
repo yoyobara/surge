@@ -1,35 +1,19 @@
 mod lua;
+mod tests;
 mod utils;
 mod vu;
 
 pub use lua::LuaModuleLoader;
 
-use crate::vu::Vu;
-use std::time::Duration;
+use crate::{lua::setup_lua_vm, vu::Vu};
 
-async fn spawn_vu(code: String) -> anyhow::Result<()> {
-    let vu = Vu::new(code);
-    vu.initialize().await?;
-    vu.mainloop().await?;
+async fn main(code: String, loader: impl LuaModuleLoader) -> anyhow::Result<()> {
+    let vu = Vu::new(code, setup_lua_vm(loader)?);
 
-    Ok(())
+    vu.initialize().await
 }
 
-async fn spawn_vus(code: String, vus: u32) -> anyhow::Result<()> {
-    for _i in 0..vus {
-        let cloned_code = code.clone();
-        tokio::spawn(spawn_vu(cloned_code)).await??;
-    }
-
-    Ok(())
-}
-
-pub fn start_runtime(
-    code: String,
-    loder: impl LuaModuleLoader,
-    vus: u32,
-    _duration: Duration,
-) -> anyhow::Result<()> {
+pub fn start_runtime(code: String, loader: impl LuaModuleLoader) -> anyhow::Result<()> {
     let tokio_runtime = tokio::runtime::Runtime::new()?;
-    tokio_runtime.block_on(spawn_vus(code, vus))
+    tokio_runtime.block_on(main(code, loader))
 }
