@@ -592,6 +592,7 @@ dependencies = [
  "anyhow",
  "bstr",
  "either",
+ "futures-util",
  "libc",
  "mlua-sys",
  "num-traits",

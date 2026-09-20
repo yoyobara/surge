@@ -1,37 +1,19 @@
-use mlua::{Table, Value};
+use mlua::Lua;
 
-pub fn pretty_value(value: Value, indent: usize) -> mlua::Result<String> {
-    match value {
-        Value::Table(table) => pretty_table(table, indent),
-        Value::String(s) => Ok(format!("{:?}", s.to_str()?)),
-        Value::Nil => Ok("nil".into()),
-        Value::Boolean(v) => Ok(v.to_string()),
-        Value::Integer(v) => Ok(v.to_string()),
-        Value::Number(v) => Ok(v.to_string()),
-        Value::Function(_) => Ok("<function>".into()),
-        Value::Thread(_) => Ok("<thread>".into()),
-        Value::UserData(_) => Ok("<userdata>".into()),
-        Value::LightUserData(_) => Ok("<lightuserdata>".into()),
-        Value::Error(e) => Ok(format!("<error: {e}>")),
-        _ => Ok("<unknown>".into()),
-    }
-}
+use crate::lua::ModuleChunk;
 
-pub fn pretty_table(table: Table, indent: usize) -> mlua::Result<String> {
-    let mut out = String::from("{\n");
+pub fn into_lua_function(
+    lua: &Lua,
+    chunk: ModuleChunk,
+    chunk_name: &str,
+) -> anyhow::Result<mlua::Function> {
+    let func = match chunk {
+        ModuleChunk::Source(src) => lua
+            .load(src.as_ref())
+            .set_name(chunk_name)
+            .into_function()?,
+        ModuleChunk::Bytecode(bc) => lua.load(&*bc).set_name(chunk_name).into_function()?,
+    };
 
-    for pair in table.pairs::<Value, Value>() {
-        let (key, value) = pair?;
-
-        out.push_str(&" ".repeat(indent + 2));
-        out.push_str(&pretty_value(key, 0)?);
-        out.push_str(" = ");
-        out.push_str(&pretty_value(value, indent + 2)?);
-        out.push_str(",\n");
-    }
-
-    out.push_str(&" ".repeat(indent));
-    out.push('}');
-
-    Ok(out)
+    Ok(func)
 }
