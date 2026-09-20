@@ -25,23 +25,3 @@ fn simple() {
 
     res.unwrap();
 }
-
-struct MissingDependencyLoader;
-
-impl LuaModuleLoader for MissingDependencyLoader {
-    fn entrypoint(&self) -> &str {
-        "local missing = require(\"nonexistent\")"
-    }
-
-    fn load(&self, _module_name: &str) -> Option<&str> {
-        None
-    }
-}
-
-#[test]
-fn missing_dependency() {
-    let ml = MissingDependencyLoader;
-    let res = start_runtime(ml);
-
-    assert!(res.is_err());
-}

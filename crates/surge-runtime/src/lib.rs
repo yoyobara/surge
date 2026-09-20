@@ -5,11 +5,13 @@ mod vu;
 
 pub use lua::LuaModuleLoader;
 
-use crate::{lua::setup_lua_vm, vu::Vu};
+use std::sync::Arc;
+
+use crate::vu::Vu;
 
 async fn main(loader: impl LuaModuleLoader) -> anyhow::Result<()> {
-    let code = loader.entrypoint().to_string();
-    let vu = Vu::new(code, setup_lua_vm(loader)?);
+    let loader = Arc::new(loader);
+    let vu = Vu::new(loader)?;
 
     vu.initialize().await
 }

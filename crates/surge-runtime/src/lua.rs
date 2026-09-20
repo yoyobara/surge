@@ -1,11 +1,13 @@
+use std::sync::Arc;
+
 use mlua::{Function, Lua, Table, Value};
 
-pub trait LuaModuleLoader: Send + 'static {
+pub trait LuaModuleLoader: Send + Sync + 'static {
     fn entrypoint(&self) -> &str;
     fn load(&self, module_name: &str) -> Option<&str>;
 }
 
-fn modify_loaders(lua: &Lua, loader: impl LuaModuleLoader) -> anyhow::Result<()> {
+fn modify_loaders(lua: &Lua, loader: Arc<impl LuaModuleLoader>) -> anyhow::Result<()> {
     let package: Table = lua.globals().get("package")?;
     let old_loaders: Table = package.get("loaders")?;
     let preload: Function = old_loaders.get(1)?;
@@ -35,7 +37,7 @@ fn modify_loaders(lua: &Lua, loader: impl LuaModuleLoader) -> anyhow::Result<()>
     Ok(())
 }
 
-pub fn setup_lua_vm(loader: impl LuaModuleLoader) -> anyhow::Result<Lua> {
+pub fn setup_lua_vm(loader: Arc<impl LuaModuleLoader>) -> anyhow::Result<Lua> {
     let lua = Lua::new();
     modify_loaders(&lua, loader)?;
 
