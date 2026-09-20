@@ -1,18 +1,18 @@
 #![cfg(test)]
 
-use crate::{LuaModuleLoader, start_runtime};
+use crate::{LuaModuleLoader, lua::ModuleChunk, start_runtime};
 
 struct MockLoader;
 
 impl LuaModuleLoader for MockLoader {
-    fn entrypoint(&self) -> &str {
-        "local a = require(\"a\"); print(a); return { loaded = a }"
+    fn entrypoint(&self) -> ModuleChunk<'_> {
+        "local a = require(\"a\"); print(a); return { loaded = a }".into()
     }
 
-    fn load(&self, module_name: &str) -> Option<&str> {
+    fn load(&self, module_name: &str) -> Option<ModuleChunk<'_>> {
         match module_name {
-            "a" => Some("return \"A\""),
-            "b" => Some("return \"B\""),
+            "a" => Some("return \"A\"".into()),
+            "b" => Some("return \"B\"".into()),
             _ => None,
         }
     }

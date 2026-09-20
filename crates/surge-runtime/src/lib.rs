@@ -3,11 +3,9 @@ mod tests;
 mod utils;
 mod vu;
 
-pub use lua::LuaModuleLoader;
-
 use std::sync::Arc;
 
-use crate::vu::Vu;
+use crate::{lua::LuaModuleLoader, vu::Vu};
 
 async fn main(loader: impl LuaModuleLoader) -> anyhow::Result<()> {
     let loader = Arc::new(loader);
