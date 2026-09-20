@@ -14,7 +14,7 @@ impl Vu {
     }
 
     pub async fn initialize(&self) -> anyhow::Result<()> {
-        self.lua.load(&self.code).exec()?;
+        let _test: mlua::Value = self.lua.load(&self.code).eval()?;
         Ok(())
     }
 

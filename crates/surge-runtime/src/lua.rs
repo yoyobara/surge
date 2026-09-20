@@ -1,6 +1,7 @@
 use mlua::{Function, Lua, Table, Value};
 
 pub trait LuaModuleLoader: Send + 'static {
+    fn entrypoint(&self) -> &str;
     fn load(&self, module_name: &str) -> Option<&str>;
 }
 
@@ -13,7 +14,8 @@ fn modify_loaders(lua: &Lua, loader: impl LuaModuleLoader) -> anyhow::Result<()>
         let module_source = match loader.load(&name) {
             Some(source) => source,
             None => {
-                return Ok((Value::String(lua.create_string("yo what")?), Value::Nil));
+                let msg = format!("\n\tno module '{}' found in custom loader", name);
+                return Ok((Value::String(lua.create_string(&msg)?), Value::Nil));
             }
         };
 
