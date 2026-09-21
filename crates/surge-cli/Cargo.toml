@@ -4,10 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+surge-runtime = { path = "../surge-runtime" }
 anyhow = "1.0.104"
 clap = { version = "4.6.6", features = ["derive", "env"] }
 cliclack = "0.5.6"
 include_dir = "0.7.4"
 petgraph = "0.6"
 ptree = { version = "0.5.2", features = ["petgraph"] }
-tokio = { version = "1.53.1", features = ["full"] }
