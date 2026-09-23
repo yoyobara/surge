@@ -551,6 +551,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "lua_bindings"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "tokio",
+]
+
+[[package]]
 name = "luajit-src"
 version = "210.7.2+b925b3e"
 source = "registry+https://github.com/rust-lang/crates.io-index"
