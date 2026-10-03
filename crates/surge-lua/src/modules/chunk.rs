@@ -1,5 +1,7 @@
 use std::{borrow::Cow, sync::Arc};
 
+use mlua::{Function, Lua};
+
 #[derive(Clone, Debug)]
 pub enum ModuleChunk<'a> {
     Source(Cow<'a, str>),
@@ -11,6 +13,13 @@ impl<'a> ModuleChunk<'a> {
         match self {
             ModuleChunk::Source(s) => s.as_bytes(),
             ModuleChunk::Bytecode(b) => b.as_ref(),
+        }
+    }
+
+    pub fn into_function(self, lua: &Lua, name: &str) -> mlua::Result<Function> {
+        match self {
+            ModuleChunk::Source(src) => lua.load(src.as_ref()).set_name(name).into_function(),
+            ModuleChunk::Bytecode(bc) => lua.load(&*bc).set_name(name).into_function(),
         }
     }
 }

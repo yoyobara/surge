@@ -1,11 +1,7 @@
 use std::sync::Arc;
 
 use mlua::Lua;
-
-use crate::{
-    lua::{LuaModuleLoader, setup_lua_vm},
-    utils::into_lua_function,
-};
+use surge_lua::{LuaModuleLoader, setup_lua_vm};
 
 pub struct Vu {
     _lua: Lua,
@@ -16,9 +12,10 @@ impl Vu {
     pub fn new<L: LuaModuleLoader>(loader: Arc<L>) -> anyhow::Result<Self> {
         let lua = setup_lua_vm(Arc::clone(&loader))?;
 
-        let entrypoint = loader.entrypoint();
-        let entrypoint_table: mlua::Table =
-            into_lua_function(&lua, entrypoint, "entrypoint")?.call(())?;
+        let entrypoint_table: mlua::Table = loader
+            .entrypoint()
+            .into_function(&lua, "entrypoint")?
+            .call(())?;
 
         let run_function: mlua::Function = entrypoint_table.get("run")?;
 

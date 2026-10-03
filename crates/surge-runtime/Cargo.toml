@@ -7,3 +7,4 @@ edition = "2024"
 anyhow = "1.0.104"
 mlua = { version = "0.12.1", features = ["anyhow", "luajit", "vendored", "send", "async"] }
 tokio = { version = "1.53.1", features = ["full"] }
+surge-lua = { path = "../surge-lua" }

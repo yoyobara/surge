@@ -1,13 +1,13 @@
-mod lua;
 mod tests;
-mod utils;
 mod vu;
 
 use std::{sync::Arc, time::Duration};
 
 use tokio::time::sleep;
 
-use crate::{lua::LuaModuleLoader, vu::Vu};
+use surge_lua::LuaModuleLoader;
+
+use crate::vu::Vu;
 
 async fn main(loader: impl LuaModuleLoader) -> anyhow::Result<()> {
     let loader = Arc::new(loader);

@@ -1,4 +1,6 @@
-use crate::{LuaModuleLoader, lua::ModuleChunk, main};
+use surge_lua::{LuaModuleLoader, ModuleChunk};
+
+use crate::main;
 
 struct MockLoader;
 
