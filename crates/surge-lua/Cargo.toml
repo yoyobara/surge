@@ -1,0 +1,11 @@
+[package]
+name = "surge-lua"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.104"
+mlua = { version = "0.12.1", features = ["anyhow", "luajit", "vendored", "send", "async", "serde"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "http2", "charset"] }
+serde_json = "1"
+surge-common = { path = "../surge-common" }
