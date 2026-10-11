@@ -1,11 +1,12 @@
 mod http;
+mod time;
 
 use mlua::{Lua, Table};
 
 type ModuleBuilder = fn(&Lua) -> anyhow::Result<Table>;
 
 /// Native modules, by the name scripts `require` them with.
-const NATIVE_MODULES: &[(&str, ModuleBuilder)] = &[("http", http::module)];
+const NATIVE_MODULES: &[(&str, ModuleBuilder)] = &[("http", http::module), ("time", time::module)];
 
 /// Registers every native module into `package.preload` so scripts can
 /// `require` them like any other module.
