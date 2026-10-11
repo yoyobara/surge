@@ -1,4 +1,3 @@
-mod tests;
 mod vu;
 
 use std::{sync::Arc, time::Duration};

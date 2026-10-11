@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use mlua::{Lua, LuaSerdeExt, LuaString, Table, Value};
 use reqwest::{Client, Method};
-use surge_common::parse_duration;
+use surge_common::parse_duration_value;
 
 /// Options accepted as the trailing `params` table of every request function.
 #[derive(Default)]
@@ -26,13 +26,7 @@ impl Params {
 
         let timeout = match table.get::<Value>("timeout")? {
             Value::Nil => None,
-            Value::String(s) => Some(parse_duration(&s.to_str()?)?),
-            // Bare numbers are milliseconds, like k6.
-            Value::Integer(ms) if ms >= 0 => Some(Duration::from_millis(ms as u64)),
-            Value::Number(ms) if ms >= 0.0 => Some(Duration::from_secs_f64(ms / 1000.0)),
-            other => {
-                return Err(mlua::Error::runtime(format!("invalid timeout: {other:?}")));
-            }
+            value => Some(parse_duration_value(value)?),
         };
 
         Ok(Self { headers, timeout })
